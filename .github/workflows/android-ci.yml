@@ -1,0 +1,83 @@
+# Lean validation CI for the scaffold phase: build, unit tests, lint, and a
+# screenshot job that records and uploads snapshots as an artifact. The release
+# pipeline (Firebase App Distribution, Play internal track, "What's new" from
+# commit subjects, snapshot drift auto-commit) mirrors Simmo's and lands when
+# there is something to distribute — see TODO.md "Decisions needing review".
+name: Android CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and unit test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          # Full history: versionCode derives from `git rev-list --count`.
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Build debug APK (runs R8 in CI)
+        run: ./gradlew assembleDebug
+
+      - name: Run unit tests
+        run: ./gradlew test
+
+      - name: Upload unit test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-reports
+          path: app/build/reports/tests/
+          if-no-files-found: ignore
+
+      - name: Run lint
+        run: ./gradlew lint
+
+  screenshot-tests:
+    name: Screenshot tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      # One explicit --tests step per screenshot class: a class not listed here
+      # never records in CI even when it passes locally (AGENTS.md "Testing
+      # expectations").
+      - name: Run home screen screenshot tests
+        run: ./gradlew :app:testDebugUnitTest --tests "app.telno.ui.HomeScreenScreenshotTest" -Proborazzi.test.record=true
+
+      - name: Upload recorded screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: roborazzi-screenshots
+          path: app/src/test/snapshots/images/
+          if-no-files-found: ignore
