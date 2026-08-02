@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Launcher icon backgrounds. Build identity is carried by color for now:
+         the Play build is green, the CI tester slate, a local dev build amber —
+         so a phone carrying more than one Telno says which is which. Lettered
+         badge bars (Simmo's scheme) are deferred; see TODO.md "Decisions
+         needing review". -->
+    <color name="ic_launcher_background">#0B6E4F</color>
+    <color name="ic_launcher_background_debug">#37474F</color>
+    <color name="ic_launcher_background_dev">#FF8F00</color>
+</resources>

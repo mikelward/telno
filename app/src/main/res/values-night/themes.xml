@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark-mode counterpart of Theme.Telno: keeps the starting window dark
+         when the system theme is dark (see values/themes.xml). -->
+    <style name="Theme.Telno" parent="android:Theme.Material.NoActionBar" />
+</resources>

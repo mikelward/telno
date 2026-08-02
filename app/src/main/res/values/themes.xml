@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compose draws everything; the platform theme only styles the window —
+         including the starting window before the first frame, so it must match
+         the resolved light/dark scheme or every cold start flashes. Light here,
+         dark override in values-night/. -->
+    <style name="Theme.Telno" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- TODO: translate -->
+    <string name="app_name" tools:ignore="MissingTranslation">Telno</string>
+
+    <!-- Home reachability states (SPEC "Reachability"): status line + one
+         sentence of what to do about it. -->
+    <!-- TODO: translate -->
+    <string name="home_status_not_set_up" tools:ignore="MissingTranslation">Not set up</string>
+    <!-- TODO: translate -->
+    <string name="home_body_not_set_up" tools:ignore="MissingTranslation">Add your Telnyx credentials to make and receive calls.</string>
+    <!-- TODO: translate -->
+    <string name="home_status_unreachable" tools:ignore="MissingTranslation">Can\'t receive calls</string>
+    <!-- TODO: translate -->
+    <string name="home_body_unreachable" tools:ignore="MissingTranslation">Telno isn\'t registered for incoming calls right now.</string>
+    <!-- TODO: translate -->
+    <string name="home_status_reachable" tools:ignore="MissingTranslation">Ready</string>
+    <!-- TODO: translate -->
+    <string name="home_body_reachable" tools:ignore="MissingTranslation">Incoming and outgoing calls are set up.</string>
+</resources>
