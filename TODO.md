@@ -30,20 +30,27 @@ as the vehicle, and record only the findings here.
 
 ## Phase 1 — Project scaffold
 
-- [ ] Gradle scaffold: single `:app` module, Kotlin, Compose, Material 3,
+- [x] Gradle scaffold: single `:app` module, Kotlin, Compose, Material 3,
       version scheme from `SPEC.md` (rev-list count), build-identity suffixes
-      and badged icons following Simmo.
-- [ ] `.claude/hooks/session-start.sh` mirroring Simmo's, so remote sandboxes
+      following Simmo (icons are color-coded per variant for now — see
+      Decisions needing review).
+- [x] `.claude/hooks/session-start.sh` mirroring Simmo's, so remote sandboxes
       can provision the Android SDK and run `test`/`lint`.
-- [ ] CI (`.github/workflows/android-ci.yml`): build, unit tests, lint,
-      screenshot recording with drift auto-commit; release steps secret-gated.
-      **The Play upload step stays disabled until `docs/PRIVACY.md` exists** —
-      Phase 2 builds already store credentials and place real calls, so the
-      policy cannot wait for the polish phase.
-- [ ] `docs/PRIVACY.md` (backs the hosted privacy policy; user-facing per
+- [x] CI (`.github/workflows/android-ci.yml`): build, unit tests, lint, and
+      screenshot recording (lean validation CI — the release pipeline is
+      deferred; see Decisions needing review). The Play upload step, when it
+      lands, ships together with the already-written `docs/PRIVACY.md`.
+- [x] `docs/PRIVACY.md` (backs the hosted privacy policy; user-facing per
       `AGENTS.md`), covering Telnyx, FCM, and the on-device debug log.
-- [ ] Telnyx SDK + Firebase dependencies declared; telemetry gated on an
-      un-checked-in `google-services.json`.
+- [x] Firebase dependencies declared; telemetry gated on an un-checked-in
+      `google-services.json` (collection off in the manifest until an in-app
+      opt-in exists).
+- [ ] Telnyx SDK dependency — deferred to Phase 2; see Decisions needing
+      review (the SDK is JitPack-distributed and JitPack is unreachable from
+      the sandbox, so declaring it now would break every sandbox build).
+- [ ] Release pipeline (Firebase App Distribution, Play internal track,
+      "What's new" from commit subjects, screenshot drift auto-commit),
+      mirroring Simmo's — when there is something worth distributing.
 
 ## Phase 2 — Outbound calling
 
@@ -123,11 +130,37 @@ as the vehicle, and record only the findings here.
       Simmo owns routing and Telno's only entry points are its own UI and
       the hand-off intent; v1 must not preclude this, but must not build
       toward it either.
+- [ ] **Translations** (owner decision, after MVP): English-only until the
+      MVP ships. New base strings still land with the per-string
+      `MissingTranslation` markers per `AGENTS.md`, so the follow-up
+      translation PR has a greppable worklist when the time comes — but no
+      locale directories and no translation PRs before then.
 
 ## Decisions needing review
 
 (Autopilot guesses land here — what was decided, the alternative, and why it
-is reversible. Empty so far; the skeleton itself made one, recorded in the
-opening PR: bootstrapping `main` with an empty commit so the PR had a base.
-The device posture copied from Phomo was reviewed with the `app.telno`
-identity decision and stands.)
+is reversible.)
+
+- **Telnyx SDK dependency deferred to Phase 2.** The SDK is distributed via
+  JitPack, which this sandbox's egress policy blocks (Maven Central carries
+  only Telnyx's low-level `com.telnyx.webrtc.lib:library`, not the SDK), so
+  declaring it now would make every sandbox `./gradlew build` fail.
+  Alternative: declare it anyway and accept a broken sandbox baseline.
+  Reversible: one version-catalog entry plus a JitPack repository line when
+  Phase 2 starts; revisit alongside the Phase 0 spike, which may also settle
+  whether the Maven Central lib + thin glue is the better route.
+- **Lean CI now, release pipeline later.** The scaffold ships build + unit
+  tests + lint + screenshot recording only; Firebase App Distribution, the
+  Play internal track, release notes from commit subjects, and snapshot drift
+  auto-commit follow when there is something to distribute (owner: "set up CI
+  when the time is right"). Alternative: port Simmo's full pipeline now.
+  Reversible: additive workflow changes.
+- **Variant icons are color-coded, not letter-badged.** Play build green, CI
+  tester slate, local dev amber, same placeholder "T" mark — enough to tell
+  three side-by-side installs apart, without porting Simmo's badge-bar vector
+  geometry for builds nobody distributes yet. Alternative: Simmo's lettered
+  DEBUG/DEV bars. Reversible: swap the drawables when real branding lands.
+- **Screenshot CI records and uploads; it does not verify.** Pixel-exact
+  verify across environments is the flaky-CI trap Simmo solved with drift
+  auto-commit; that machinery arrives with the release pipeline. Alternative:
+  verify mode now. Reversible: flip the flag once auto-commit exists.

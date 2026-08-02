@@ -342,6 +342,27 @@ proposed fix) without silently fixing it in the same commit.
   credential, or a raw push token. Above the floor the test is need, not
   category. `docs/PRIVACY.md` must describe what the log carries before any
   sharing feature ships. The rule above is unchanged for everything else.
+- **The privacy policy protects users without painting the product into a
+  corner** (owner guidance). Write `docs/PRIVACY.md` to preserve user privacy
+  and to be true of the app as shipped — not to encode the narrowest possible
+  interpretation as a permanent promise. Absolute claims ("never", "no
+  servers", "exactly two parties") are cheap to write and expensive to walk
+  back; prefer present-tense statements of what the app does today, and weigh
+  functionality, data-loss protection, performance, cost, and simplicity
+  alongside privacy before committing a claim that would constrain them. The
+  load-bearing invariant is process, not phrasing: the policy is updated
+  *before* any behavior that touches new data ships, so users are never told
+  less than the truth — and the policy never promises more than the product
+  has actually decided. **Informed user consent typically unlocks what
+  defaults keep closed.** The owner's example of the approximate shape —
+  not a definition: redacted logs sent to analytics or crash services, and
+  data backups, can all be fine with consent. The boundaries themselves are
+  product judgments made case by case, weighing privacy against
+  functionality, data loss, performance, cost, and simplicity — not derived
+  from this bullet as if it were a spec, and taken to the owner when
+  genuinely uncertain (see Autonomy: privacy uncertainty waits). The
+  debug-log content floor above stands as today's deliberate choice;
+  everything else describes, it doesn't foreclose.
 
 ## Language and spelling
 
@@ -374,11 +395,12 @@ in any locale's string resources.
 
 - **JDK 21** is pre-installed. **Android SDK** lives at `/opt/android-sdk`
   (`ANDROID_HOME`). On Claude Code on the web the SDK is *not* pre-installed;
-  once the Gradle scaffold lands (Phase 0 in `TODO.md`), a `SessionStart` hook
-  at `.claude/hooks/session-start.sh` (mirroring Simmo's) provisions it at
-  session start. Until then there is nothing to build.
-- Key commands once the scaffold exists: `./gradlew assembleDebug`,
-  `./gradlew test`, `./gradlew lint`, `./gradlew clean`.
+  the `SessionStart` hook at `.claude/hooks/session-start.sh` (mirroring
+  Simmo's) provisions it at session start. If `/opt/android-sdk` is missing
+  pieces mid-session, run `CLAUDE_CODE_REMOTE=true
+  .claude/hooks/session-start.sh` rather than hand-installing.
+- Key commands: `./gradlew assembleDebug`, `./gradlew test`,
+  `./gradlew lint`, `./gradlew clean`.
 - **No emulator practicality**: KVM is unavailable in the remote environments,
   and no emulator has a cellular radio, microphone, or FCM delivery anyway —
   call and push flows need a real device. Say so when reporting verification

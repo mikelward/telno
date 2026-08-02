@@ -8,11 +8,11 @@ vendor's WebRTC SDK, letting the provider own the always-on part — the push,
 the wake race, and holding the call while the phone wakes up.
 
 > **Status.** This spec describes the intended v1 product and architecture.
-> The repository currently contains only documentation; the project scaffold
-> and the implementation land across the milestones in `TODO.md`. Where this
-> spec relies on a claim that has not been verified against the live Telnyx
-> platform, it says so — the two load-bearing ones are marked **[verify]** and
-> are the first milestone's job.
+> The repository contains the project scaffold (buildable app shell, home
+> surface, CI); the calling implementation lands across the milestones in
+> `TODO.md`. Where this spec relies on a claim that has not been verified
+> against the live Telnyx platform, it says so — the two load-bearing ones
+> are marked **[verify]** and are the first milestone's job.
 
 ## Product shape
 
@@ -315,14 +315,18 @@ exercise.
 - `versionCode` = `git rev-list --count HEAD`; `versionName` =
   `"1.0.<count>+<shortSha>"`, derived at configure time — same scheme as the
   siblings.
-- CI mirrors Simmo's: build + unit tests + lint on every PR, screenshot
-  recording with auto-commit of drift, and on `main` Firebase App Distribution
-  plus Play internal track, secret-gated so forks and the sandbox build
-  cleanly. Commit subjects become "What's new".
+- CI today is lean validation: build + unit tests + lint on every PR, plus
+  screenshot recording uploaded as an artifact. The release pipeline —
+  screenshot drift auto-commit, Firebase App Distribution, the Play internal
+  track with commit subjects as "What's new", all secret-gated so forks and
+  the sandbox build cleanly — mirrors Simmo's and lands when there is
+  something worth distributing (`TODO.md` Phase 1 / Decisions needing
+  review).
 - **applicationId is `app.telno`** (owner decision, matching Simmo's
   `app.simmo`); display name **Telno**. Play build, CI tester (`.debug`), and
-  local dev build (`.dev`) follow Simmo's applicationId-suffix and
-  badged-icon scheme so three builds co-exist distinguishably on one phone.
+  local dev build (`.dev`) follow Simmo's applicationId-suffix scheme, with
+  color-coded launcher icons telling the three co-installed builds apart
+  (lettered badges deferred until real branding exists).
 
 ## Testing strategy
 
