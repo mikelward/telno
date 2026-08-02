@@ -54,7 +54,10 @@ as the vehicle, and record only the findings here.
 
 ## Phase 2 — Outbound calling
 
-- [ ] Encrypted, backup-excluded credential store + setup screen.
+- [x] Encrypted, backup-excluded credential store + setup screen (Keystore
+      AES-GCM mirroring Phomo's store; home reachability now derives from the
+      stored account — credentials without a push binding read "can't receive
+      calls", honestly).
 - [ ] Pure-Kotlin call state machine (outbound rows) + exhaustive unit tests.
 - [ ] Self-managed `ConnectionService` + phone account registration.
 - [ ] Dialer screen (E.164 normalization, emergency-call refusal with

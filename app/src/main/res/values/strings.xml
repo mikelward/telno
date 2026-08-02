@@ -6,6 +6,8 @@
     <!-- Home reachability states (SPEC "Reachability"): status line + one
          sentence of what to do about it. -->
     <!-- TODO: translate -->
+    <string name="home_status_checking" tools:ignore="MissingTranslation">Checking…</string>
+    <!-- TODO: translate -->
     <string name="home_status_not_set_up" tools:ignore="MissingTranslation">Not set up</string>
     <!-- TODO: translate -->
     <string name="home_body_not_set_up" tools:ignore="MissingTranslation">Add your Telnyx credentials to make and receive calls.</string>
@@ -17,4 +19,32 @@
     <string name="home_status_reachable" tools:ignore="MissingTranslation">Ready</string>
     <!-- TODO: translate -->
     <string name="home_body_reachable" tools:ignore="MissingTranslation">Incoming and outgoing calls are set up.</string>
+    <!-- TODO: translate -->
+    <string name="home_set_up" tools:ignore="MissingTranslation">Set up</string>
+    <!-- TODO: translate -->
+    <string name="home_account" tools:ignore="MissingTranslation">Account</string>
+    <!-- TODO: translate -->
+    <string name="home_status_account_error" tools:ignore="MissingTranslation">Account needs attention</string>
+    <!-- TODO: translate -->
+    <string name="home_body_account_error" tools:ignore="MissingTranslation">Your saved credentials can\'t be read. Set them up again.</string>
+
+    <!-- Telnyx account setup form. -->
+    <!-- TODO: translate -->
+    <string name="setup_title" tools:ignore="MissingTranslation">Telnyx account</string>
+    <!-- TODO: translate -->
+    <string name="setup_username_label" tools:ignore="MissingTranslation">SIP username</string>
+    <!-- TODO: translate -->
+    <string name="setup_password_label" tools:ignore="MissingTranslation">SIP password</string>
+    <!-- TODO: translate -->
+    <string name="setup_save" tools:ignore="MissingTranslation">Save</string>
+    <!-- TODO: translate -->
+    <string name="setup_saving" tools:ignore="MissingTranslation">Saving…</string>
+    <!-- TODO: translate -->
+    <string name="setup_back" tools:ignore="MissingTranslation">Back</string>
+    <!-- TODO: translate -->
+    <string name="setup_error_blank" tools:ignore="MissingTranslation">Enter a username and password.</string>
+    <!-- TODO: translate -->
+    <string name="setup_error_save" tools:ignore="MissingTranslation">Couldn\'t save. Try again.</string>
+    <!-- TODO: translate -->
+    <string name="setup_unreadable_note" tools:ignore="MissingTranslation">Your saved credentials can\'t be read. Saving replaces them.</string>
 </resources>
