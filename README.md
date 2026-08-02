@@ -19,5 +19,6 @@ selection for outgoing calls) and [phomo](https://github.com/mikelward/phomo)
 (outbound-only SIP client, whose `PUSH.md` analysis led to Telno's
 architecture).
 
-Status: documentation-only skeleton. The scaffold and implementation land per
-`TODO.md`.
+Status: project scaffold — a buildable app shell (`./gradlew assembleDebug`,
+`test`, `lint`) with a placeholder home screen and CI. The calling
+implementation lands per `TODO.md`.
