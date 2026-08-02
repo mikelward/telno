@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import app.telno.domain.Reachability
+import app.telno.SetupError
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -18,53 +18,63 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 /**
- * Renders the home/status surface in each reachability state (SPEC "UI
- * architecture"). Uses MaterialTheme rather than TelnoTheme: dynamic color
- * reads device palettes, which would make snapshots environment-dependent.
+ * Renders the Telnyx account form (SPEC "UI architecture"): empty, filled, and
+ * failed-save states. Fixture values are obviously fake, never anyone's real
+ * credentials (AGENTS.md Privacy).
  */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [36], qualifiers = "w411dp-h914dp-420dpi")
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-class HomeScreenScreenshotTest {
+class AccountSetupScreenshotTest {
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun home_notSetUp() {
-        setHome(Reachability.NOT_SET_UP)
-        composeRule.onNodeWithText("Not set up").assertExists()
-        captureSnapshot("home_not_set_up.png")
+    fun setup_empty() {
+        setSetup(username = "", password = "", error = null)
+        composeRule.onNodeWithText("Telnyx account").assertExists()
+        captureSnapshot("setup_empty.png")
     }
 
     @Test
-    fun home_unreachable() {
-        setHome(Reachability.UNREACHABLE)
-        composeRule.onNodeWithText("Can't receive calls").assertExists()
-        captureSnapshot("home_unreachable.png")
+    fun setup_filled() {
+        setSetup(username = "example-user", password = "example-pass", error = null)
+        captureSnapshot("setup_filled.png")
     }
 
     @Test
-    fun home_reachable() {
-        setHome(Reachability.REACHABLE)
-        composeRule.onNodeWithText("Ready").assertExists()
-        captureSnapshot("home_reachable.png")
+    fun setup_unreadableAccount() {
+        setSetup(username = "", password = "", error = null, accountUnreadable = true)
+        composeRule.onNodeWithText("Your saved credentials can't be read. Saving replaces them.").assertExists()
+        captureSnapshot("setup_unreadable.png")
     }
 
     @Test
-    fun home_accountUnreadable() {
-        setHome(Reachability.NOT_SET_UP, accountUnreadable = true)
-        composeRule.onNodeWithText("Account needs attention").assertExists()
-        captureSnapshot("home_account_unreadable.png")
+    fun setup_saveFailed() {
+        setSetup(username = "example-user", password = "example-pass", error = SetupError.SAVE_FAILED)
+        composeRule.onNodeWithText("Couldn't save. Try again.").assertExists()
+        captureSnapshot("setup_save_failed.png")
     }
 
-    private fun setHome(reachability: Reachability?, accountUnreadable: Boolean = false) {
+    private fun setSetup(
+        username: String,
+        password: String,
+        error: SetupError?,
+        accountUnreadable: Boolean = false,
+    ) {
         composeRule.setContent {
             MaterialTheme {
                 Surface {
-                    HomeScreen(
-                        reachability = reachability,
+                    AccountSetupScreen(
+                        username = username,
+                        password = password,
+                        saving = false,
                         accountUnreadable = accountUnreadable,
-                        onSetUp = {},
+                        error = error,
+                        onUsernameChange = {},
+                        onPasswordChange = {},
+                        onSave = {},
+                        onBack = {},
                     )
                 }
             }

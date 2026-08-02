@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   Telno lets Android's default cloud backup carry non-sensitive settings, but
+   never the Telnyx account credentials. The account store (see SPEC.md
+   "Persistence") is written to the reserved sharedpref file below and excluded
+   from both cloud backup and device-to-device transfer: a credential silently
+   restored onto another device would also silently steal the ring there.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="telno_account.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="telno_account.xml" />
+    </device-transfer>
+</data-extraction-rules>

@@ -264,7 +264,9 @@ light and dark first-class — mirroring Simmo's layering:
   domain, kept too small to hide logic.
 - **UI layer**: setup (credentials + permissions), home/status (reachability
   state, recent state), dialer, in-call screen, settings. State via
-  ViewModel + StateFlow; persistence via DataStore. Every screen state gets a
+  ViewModel + StateFlow. Persistence splits by sensitivity: credentials live
+  in the dedicated encrypted, backup-excluded store (see Persistence);
+  ordinary settings use DataStore when they arrive. Every screen state gets a
   Roborazzi screenshot test wired into CI.
 
 Screens render from in-memory state and appear immediately; the incoming-call
@@ -277,6 +279,11 @@ indistinguishable from the phone not ringing.
   encrypted at rest, in a backup-excluded store (never carried off-device by
   cloud backup or device-to-device transfer — a restored token/credential set
   on another device would also silently steal the ring; see Reachability).
+  A store that exists but can't be read (key loss, corruption) surfaces as
+  "account needs attention" with setup as the recovery path — never as a
+  fresh install that quietly invites overwriting it, and always with a
+  debug-log reason. Setup itself stays reachable after credentials are
+  saved, so a mistyped password never requires clearing app data.
 - **Settings** are ordinary preferences and may be backed up.
 - **No call history of Telno's own in v1** beyond what the platform records
   for self-managed Telecom calls. Adding one later is a product decision
