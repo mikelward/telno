@@ -207,11 +207,17 @@ proposed fix) without silently fixing it in the same commit.
 - **Poll your own open PRs every 5 minutes** — the ones you opened or were
   explicitly asked to watch. Never end a turn by going idle with one of yours
   still open: arm the next check with whatever the client offers (`send_later`,
-  a scheduled task / cron, `/loop`), and arm it *without asking*. Keep polling
-  until the PR state is final: merged, with CI and the reviewer both reported
-  on the final PR head — or closed unmerged. Then run one last
-  reply-or-resolve pass and cancel the watch. Open a follow-up PR (with its
-  own watch) for anything a merged PR still needs.
+  a scheduled task / cron, `/loop`), and arm it *without asking*. Once a PR is
+  green, reviewed, and has nothing left but the merge, drop to half-hourly —
+  that's a queue waiting on a human, not work in flight. Merged or closed
+  unmerged is terminal: wait for one more check to see CI and the reviewer
+  report on the final head, but don't block on a report that may never
+  land — an early manual merge, a docs-only push a path filter never runs CI
+  on, a down review service — settle for whatever's known by then and move
+  on. Either way, run one last reply-or-resolve pass, then cancel the watch
+  in full: `unsubscribe_pr_activity` *and* the pending scheduled trigger, not
+  just one of the two. Open a follow-up PR (with its own watch) for anything
+  a merged PR still needs.
 - **One pending check per PR, not one per wake-up.** Before arming, reuse or
   cancel the pending one (`update_trigger`, or `delete_trigger` then re-arm) so
   exactly one check is outstanding.
