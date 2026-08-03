@@ -207,15 +207,11 @@ proposed fix) without silently fixing it in the same commit.
 - **Poll your own open PRs every 5 minutes** — the ones you opened or were
   explicitly asked to watch. Never end a turn by going idle with one of yours
   still open: arm the next check with whatever the client offers (`send_later`,
-  a scheduled task / cron, `/loop`), and arm it *without asking*. Merging
-  doesn't end the watch either: drop to a slower cadence (every half hour or
-  so) and keep handling late comments.
-- **Three polling states, so the 5-minute cadence has an end.** Five minutes is
-  for a PR with something outstanding: CI running, a review requested, a
-  comment unanswered, a merge conflict. Once a PR is green, reviewed, and has
-  nothing left but the merge — or is merged and only waiting out late
-  comments — drop to half-hourly. Stop entirely when it merges or closes and
-  the late-comment window has passed.
+  a scheduled task / cron, `/loop`), and arm it *without asking*. Keep polling
+  until the PR state is final: merged, with CI and the reviewer both reported
+  on the final PR head — or closed unmerged. Then run one last
+  reply-or-resolve pass and cancel the watch. Open a follow-up PR (with its
+  own watch) for anything a merged PR still needs.
 - **One pending check per PR, not one per wake-up.** Before arming, reuse or
   cancel the pending one (`update_trigger`, or `delete_trigger` then re-arm) so
   exactly one check is outstanding.
@@ -264,8 +260,7 @@ proposed fix) without silently fixing it in the same commit.
 - Link every open PR in the stack (one URL per line) whenever you push,
   summarize CI, or invite review. Refresh the PR title and body on every push
   so they describe the full, latest state of the branch.
-- Keep watching merged PRs for late review comments; stop once every post-merge
-  comment is handled *and* the PR has gone ~24h without a new one.
+- **Canceling the watch**: see the polling bullet under **Autonomy**.
 - Skip echo events silently: if the body matches a comment you just posted,
   it's your own echo.
 - On CI failure: check for the failing-tests PR comment first; no comment means
